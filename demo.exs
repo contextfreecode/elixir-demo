@@ -1,5 +1,5 @@
-defmodule KV.Bucket do
-  use Agent
+defmodule My.Bucket do
+  # use Agent
 
   @doc """
   Starts a new bucket.
@@ -23,7 +23,7 @@ defmodule KV.Bucket do
   end
 end
 
-defmodule KV.Registry do
+defmodule My.Registry do
   use GenServer
 
   ## Client API
@@ -68,7 +68,7 @@ defmodule KV.Registry do
     if Map.has_key?(names, name) do
       {:noreply, names}
     else
-      {:ok, bucket} = KV.Bucket.start_link([])
+      {:ok, bucket} = My.Bucket.start_link([])
       {:noreply, Map.put(names, name, bucket)}
     end
   end
@@ -76,8 +76,9 @@ end
 
 IO.puts "Hi!"
 
-{:ok, registry} = GenServer.start_link(KV.Registry, :ok)
+{:ok, registry} = GenServer.start_link(My.Registry, :ok)
 # GenServer.cast(registry, {:create, "shopping"})
 # {:ok, bk} = GenServer.call(registry, {:lookup, "shopping"})
-KV.Registry.create(registry, "shopping")
-KV.Registry.lookup(registry, "shopping")
+My.Registry.create(registry, "shopping")
+{:ok, bk} =  My.Registry.lookup(registry, "shopping")
+IO.inspect bk
